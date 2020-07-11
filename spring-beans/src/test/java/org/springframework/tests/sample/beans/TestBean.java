@@ -17,6 +17,7 @@
 package org.springframework.tests.sample.beans;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -31,6 +32,7 @@ import java.util.Set;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -87,7 +89,7 @@ public class TestBean implements BeanNameAware, BeanFactoryAware, ITestBean, IOt
 
 	private Properties someProperties = new Properties();
 
-	private INestedTestBean doctor = new NestedTestBean();
+	private INestedTestBean doctor;// = new NestedTestBean();
 
 	private INestedTestBean lawyer = new NestedTestBean();
 
@@ -494,6 +496,11 @@ public class TestBean implements BeanNameAware, BeanFactoryAware, ITestBean, IOt
 	@Override
 	public String toString() {
 		return this.name;
+	}
+
+
+	public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+		System.out.println(Pet.class.getConstructor().newInstance());
 	}
 
 }

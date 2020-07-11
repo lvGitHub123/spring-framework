@@ -22,10 +22,12 @@ package org.springframework.tests.sample.beans;
  */
 public class Pet {
 
+
+
 	private String name;
 
-	public Pet(String name) {
-		this.name = name;
+	public Pet() {
+
 	}
 
 	public String getName() {

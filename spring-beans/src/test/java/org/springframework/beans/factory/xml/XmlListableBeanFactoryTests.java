@@ -101,6 +101,8 @@ public class XmlListableBeanFactoryTests extends AbstractListableBeanFactoryTest
 	@Override
 	public void count() {
 		assertCount(24);
+		String[] defnames = getListableBeanFactory().getBeanDefinitionNames();
+		System.out.println(Arrays.toString(defnames));
 	}
 
 	@Test

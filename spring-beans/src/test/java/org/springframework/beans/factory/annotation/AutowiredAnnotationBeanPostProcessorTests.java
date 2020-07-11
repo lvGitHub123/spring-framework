@@ -109,10 +109,13 @@ public class AutowiredAnnotationBeanPostProcessorTests {
 	public void testIncompleteBeanDefinition() {
 		bf.registerBeanDefinition("testBean", new GenericBeanDefinition());
 		try {
-			bf.getBean("testBean");
+			GenericBeanDefinition testBean = (GenericBeanDefinition)bf.getBean("testBean");
+			System.out.println(testBean.getParentName());
 			fail("Should have thrown BeanCreationException");
 		}
 		catch (BeanCreationException ex) {
+			ex.printStackTrace();
+//			System.out.println(ex.getMessage());
 			assertTrue(ex.getRootCause() instanceof IllegalStateException);
 		}
 	}
@@ -120,18 +123,22 @@ public class AutowiredAnnotationBeanPostProcessorTests {
 	@Test
 	public void testResourceInjection() {
 		RootBeanDefinition bd = new RootBeanDefinition(ResourceInjectionBean.class);
-		bd.setScope(RootBeanDefinition.SCOPE_PROTOTYPE);
+		bd.setScope(RootBeanDefinition.SCOPE_SINGLETON);
 		bf.registerBeanDefinition("annotatedBean", bd);
-		TestBean tb = new TestBean();
-		bf.registerSingleton("testBean", tb);
-
+		RootBeanDefinition bdTestBean = new RootBeanDefinition(TestBean.class);
+		bf.registerBeanDefinition("testBean", bdTestBean);
+//		TestBean tb = new TestBean();
+//		bf.registerSingleton("testBean", tb);
+		System.out.println(Arrays.asList(bf.getBeanDefinitionNames()));
+//		System.out.println(Arrays.asList(bf.getSingletonNames()));
 		ResourceInjectionBean bean = (ResourceInjectionBean) bf.getBean("annotatedBean");
-		assertSame(tb, bean.getTestBean());
-		assertSame(tb, bean.getTestBean2());
-
-		bean = (ResourceInjectionBean) bf.getBean("annotatedBean");
-		assertSame(tb, bean.getTestBean());
-		assertSame(tb, bean.getTestBean2());
+//		System.out.println(Arrays.asList(bf.getSingletonNames()));
+//		assertSame(tb, bean.getTestBean());
+//		assertSame(tb, bean.getTestBean2());
+		System.out.println(bean.getTestBean() + " : " + bean.getTestBean2());
+//		bean = (ResourceInjectionBean) bf.getBean("annotatedBean");
+//		assertSame(tb, bean.getTestBean());
+//		assertSame(tb, bean.getTestBean2());
 	}
 
 	@Test

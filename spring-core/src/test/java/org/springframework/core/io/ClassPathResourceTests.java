@@ -48,8 +48,12 @@ public class ClassPathResourceTests {
 
 
 	@Test
-	public void stringConstructorRaisesExceptionWithFullyQualifiedPath() {
-		assertExceptionContainsFullyQualifiedPath(new ClassPathResource(FQ_RESOURCE_PATH));
+	public void stringConstructorRaisesExceptionWithFullyQualifiedPath() throws IOException {
+		ClassPathResource resource = new ClassPathResource(FQ_RESOURCE_PATH);
+		System.out.println(resource.getFilename());
+		System.out.println(resource.getDescription());
+		System.out.println(resource.getFile());
+		assertExceptionContainsFullyQualifiedPath(resource);
 	}
 
 	@Test
