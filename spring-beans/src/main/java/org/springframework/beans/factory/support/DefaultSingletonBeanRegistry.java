@@ -151,6 +151,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		Assert.notNull(singletonFactory, "Singleton factory must not be null");
 		synchronized (this.singletonObjects) {
 			if (!this.singletonObjects.containsKey(beanName)) {
+				//  为了给循环依赖的属性提供终止的条件(解决依赖循环的关键)
 				this.singletonFactories.put(beanName, singletonFactory);
 				this.earlySingletonObjects.remove(beanName);
 				this.registeredSingletons.add(beanName);
@@ -181,10 +182,11 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				singletonObject = this.earlySingletonObjects.get(beanName);
 				// 循环依赖为空并且允许循环依赖
 				if (singletonObject == null && allowEarlyReference) {
+					// 单例缓存为空情况下，则获取ObjectFactory中的
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
-					// 单例缓存为空情况下，则获取FactoryBean中的
 					if (singletonFactory != null) {
 						singletonObject = singletonFactory.getObject();
+						// 添加提前的
 						this.earlySingletonObjects.put(beanName, singletonObject);
 						this.singletonFactories.remove(beanName);
 					}
@@ -246,9 +248,11 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					if (recordSuppressedExceptions) {
 						this.suppressedExceptions = null;
 					}
+					// 完成bean的加载移除singletonsCurrentlyInCreation的beanName
 					afterSingletonCreation(beanName);
 				}
 				if (newSingleton) {
+					// 添加缓存到singletonObjects并且从singletonFactories、earlySingletonObjects移除
 					addSingleton(beanName, singletonObject);
 				}
 			}
